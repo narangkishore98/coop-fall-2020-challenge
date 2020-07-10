@@ -3,35 +3,41 @@ class EventSourcer():
 
     def __init__(self):
         self.value = 0
-        self.stack = []
-        self.track = -1
+        self.stack = [self.value]
+        self.other = []
 
     def add(self, num: int):
-        self.value += num
-        self.stack.append(self.value)
-        self.track += 1
+  
+        self.stack.append(num)
+        self.value = sum(self.stack)
+   
 
     def subtract(self, num: int):
-        self.value -= num
-        self.append(self.value)
-        self.track += 1
+        
+        self.stack.append(-num)
+        self.value = sum(self.stack)
+     
 
     def undo(self):
-        #self.track -= 1
-        if track == 0:
-            self.value = self.stack[self.track]
-        else:
-            self.track -= 1
-            self.value = self.stack[self.track]
+        if len(self.stack) != 0:
+
+            self.other.append(self.stack.pop())
+            self.value = sum(self.stack)
+                
 
 
     def redo(self):
-        if self.track<len(self.stack)-1:
-            self.track+=1
-            self.value=self.stack[self.track]
+        if len(self.other) != 0:
+            self.stack.append(self.other.pop())
+       
+            self.value = sum(self.stack)
 
     def bulk_undo(self, steps: int):
-        pass
+        while steps > 0:
+            self.undo()
+            steps -= 1
 
     def bulk_redo(self, steps: int):
-        pass
+        while steps > 0:
+            self.redo()
+            steps -= 1
